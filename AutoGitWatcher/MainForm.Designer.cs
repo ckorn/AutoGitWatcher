@@ -28,14 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.dfDirectories = new System.Windows.Forms.TextBox();
             this.panelTop = new System.Windows.Forms.Panel();
             this.pbApply = new System.Windows.Forms.Button();
+            this.bindingSourceViewModel = new System.Windows.Forms.BindingSource(this.components);
             this.panelTop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceViewModel)).BeginInit();
             this.SuspendLayout();
             // 
             // dfDirectories
             // 
+            this.dfDirectories.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceViewModel, "Directories", true));
             this.dfDirectories.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dfDirectories.Location = new System.Drawing.Point(0, 54);
             this.dfDirectories.Multiline = true;
@@ -62,6 +66,10 @@
             this.pbApply.UseVisualStyleBackColor = true;
             this.pbApply.Click += new System.EventHandler(this.pbApply_Click);
             // 
+            // bindingSourceViewModel
+            // 
+            this.bindingSourceViewModel.DataSource = typeof(ViewModel);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -72,6 +80,7 @@
             this.Name = "MainForm";
             this.Text = "AutoGitWatcher";
             this.panelTop.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceViewModel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -82,6 +91,7 @@
         private System.Windows.Forms.TextBox dfDirectories;
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Button pbApply;
+        private System.Windows.Forms.BindingSource bindingSourceViewModel;
     }
 }
 

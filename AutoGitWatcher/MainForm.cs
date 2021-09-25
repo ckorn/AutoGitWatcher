@@ -18,6 +18,7 @@ namespace AutoGitWatcher
             InitializeComponent();
 
             this.viewModel = new ViewModel();
+            this.bindingSourceViewModel.DataSource = this.viewModel;
         }
 
         private void pbApply_Click(object sender, EventArgs e)
