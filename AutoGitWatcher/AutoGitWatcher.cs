@@ -101,27 +101,30 @@ namespace AutoGitWatcher
                 Thread.Sleep(1000);
                 lock (fileSystemWatcherLastChangeDictionary)
                 {
+                    List<FileSystemWatcher> toDelete = new();
                     try
                     {
-                        List<FileSystemWatcher> toDelete = new();
                         foreach (KeyValuePair<FileSystemWatcher, DateTime> keyValuePair in fileSystemWatcherLastChangeDictionary)
                         {
                             if (DateTime.Now - keyValuePair.Value > new TimeSpan(0, 0, 2))
                             {
+                                toDelete.Add(keyValuePair.Key);
                                 string directory = keyValuePair.Key.Path;
                                 Repository repository = new(directory);
                                 Commands.Stage(repository, "*");
                                 Signature signature = repository.Config.BuildSignature(DateTimeOffset.Now);
                                 repository.Commit("AutoGitWatcher", signature, signature);
                                 repository.Network.Push(repository.Head);
-                                toDelete.Add(keyValuePair.Key);
                             }
                         }
-                        toDelete.ForEach(x => fileSystemWatcherLastChangeDictionary.Remove(x));
                     }
                     catch (Exception e)
                     {
                         this.Log?.Invoke(this, GetExceptionText(e));
+                    }
+                    finally
+                    {
+                        toDelete.ForEach(x => fileSystemWatcherLastChangeDictionary.Remove(x));
                     }
                 }
             }
