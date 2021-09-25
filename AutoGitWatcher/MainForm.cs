@@ -19,6 +19,23 @@ namespace AutoGitWatcher
 
             this.viewModel = new ViewModel();
             this.bindingSourceViewModel.DataSource = this.viewModel;
+            this.viewModel.Log += ViewModel_Log;
+        }
+
+        private void ViewModel_Log(object? sender, string e)
+        {
+            void DoLog() 
+            {
+                this.mlLog.AppendText($"{DateTime.Now}: {e}{Environment.NewLine}");
+            }
+            if (this.InvokeRequired)
+            {
+                this.Invoke(DoLog);
+            }
+            else
+            {
+                DoLog();
+            }
         }
 
         private void pbApply_Click(object sender, EventArgs e)

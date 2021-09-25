@@ -29,23 +29,28 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.dfDirectories = new System.Windows.Forms.TextBox();
+            this.mlDirectories = new System.Windows.Forms.TextBox();
+            this.bindingSourceViewModel = new System.Windows.Forms.BindingSource(this.components);
             this.panelTop = new System.Windows.Forms.Panel();
             this.pbApply = new System.Windows.Forms.Button();
-            this.bindingSourceViewModel = new System.Windows.Forms.BindingSource(this.components);
-            this.panelTop.SuspendLayout();
+            this.mlLog = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceViewModel)).BeginInit();
+            this.panelTop.SuspendLayout();
             this.SuspendLayout();
             // 
-            // dfDirectories
+            // mlDirectories
             // 
-            this.dfDirectories.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceViewModel, "Directories", true));
-            this.dfDirectories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dfDirectories.Location = new System.Drawing.Point(0, 54);
-            this.dfDirectories.Multiline = true;
-            this.dfDirectories.Name = "dfDirectories";
-            this.dfDirectories.Size = new System.Drawing.Size(673, 364);
-            this.dfDirectories.TabIndex = 0;
+            this.mlDirectories.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceViewModel, "Directories", true));
+            this.mlDirectories.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mlDirectories.Location = new System.Drawing.Point(0, 54);
+            this.mlDirectories.Multiline = true;
+            this.mlDirectories.Name = "mlDirectories";
+            this.mlDirectories.Size = new System.Drawing.Size(673, 271);
+            this.mlDirectories.TabIndex = 0;
+            // 
+            // bindingSourceViewModel
+            // 
+            this.bindingSourceViewModel.DataSource = typeof(ViewModel);
             // 
             // panelTop
             // 
@@ -66,21 +71,30 @@
             this.pbApply.UseVisualStyleBackColor = true;
             this.pbApply.Click += new System.EventHandler(this.pbApply_Click);
             // 
-            // bindingSourceViewModel
+            // mlLog
             // 
-            this.bindingSourceViewModel.DataSource = typeof(ViewModel);
+            this.mlLog.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceViewModel, "Directories", true));
+            this.mlLog.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.mlLog.Location = new System.Drawing.Point(0, 325);
+            this.mlLog.Multiline = true;
+            this.mlLog.Name = "mlLog";
+            this.mlLog.ReadOnly = true;
+            this.mlLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.mlLog.Size = new System.Drawing.Size(673, 93);
+            this.mlLog.TabIndex = 2;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(673, 418);
-            this.Controls.Add(this.dfDirectories);
+            this.Controls.Add(this.mlDirectories);
+            this.Controls.Add(this.mlLog);
             this.Controls.Add(this.panelTop);
             this.Name = "MainForm";
             this.Text = "AutoGitWatcher";
-            this.panelTop.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceViewModel)).EndInit();
+            this.panelTop.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -88,10 +102,11 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox dfDirectories;
+        private System.Windows.Forms.TextBox mlDirectories;
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Button pbApply;
         private System.Windows.Forms.BindingSource bindingSourceViewModel;
+        private System.Windows.Forms.TextBox mlLog;
     }
 }
 

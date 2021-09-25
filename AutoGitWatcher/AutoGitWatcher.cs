@@ -15,6 +15,8 @@ namespace AutoGitWatcher
         private readonly Dictionary<FileSystemWatcher, DateTime> fileSystemWatcherLastChangeDictionary = new ();
         private Task? gitTask = null;
 
+        public event EventHandler<string>? Log;
+
         public void StartWatch(string[] directoryArray) 
         {
             StopWatch();
@@ -99,23 +101,41 @@ namespace AutoGitWatcher
                 Thread.Sleep(1000);
                 lock (fileSystemWatcherLastChangeDictionary)
                 {
-                    List<FileSystemWatcher> toDelete = new();
-                    foreach (KeyValuePair<FileSystemWatcher, DateTime> keyValuePair in fileSystemWatcherLastChangeDictionary)
+                    try
                     {
-                        if (DateTime.Now - keyValuePair.Value > new TimeSpan(0, 0, 2))
+                        List<FileSystemWatcher> toDelete = new();
+                        foreach (KeyValuePair<FileSystemWatcher, DateTime> keyValuePair in fileSystemWatcherLastChangeDictionary)
                         {
-                            string directory = keyValuePair.Key.Path;
-                            Repository repository = new(directory);
-                            Commands.Stage(repository, "*");
-                            Signature signature = repository.Config.BuildSignature(DateTimeOffset.Now);
-                            repository.Commit("AutoGitWatcher", signature, signature);
-                            repository.Network.Push(repository.Head);
-                            toDelete.Add(keyValuePair.Key);
+                            if (DateTime.Now - keyValuePair.Value > new TimeSpan(0, 0, 2))
+                            {
+                                string directory = keyValuePair.Key.Path;
+                                Repository repository = new(directory);
+                                Commands.Stage(repository, "*");
+                                Signature signature = repository.Config.BuildSignature(DateTimeOffset.Now);
+                                repository.Commit("AutoGitWatcher", signature, signature);
+                                repository.Network.Push(repository.Head);
+                                toDelete.Add(keyValuePair.Key);
+                            }
                         }
+                        toDelete.ForEach(x => fileSystemWatcherLastChangeDictionary.Remove(x));
                     }
-                    toDelete.ForEach(x => fileSystemWatcherLastChangeDictionary.Remove(x));
+                    catch (Exception e)
+                    {
+                        this.Log?.Invoke(this, GetExceptionText(e));
+                    }
                 }
             }
+        }
+
+        private string GetExceptionText(Exception e) 
+        {
+            string text = e.Message;
+            text += Environment.NewLine + e.StackTrace;
+            if (e.InnerException != null)
+            {
+                text += Environment.NewLine + GetExceptionText(e.InnerException);
+            }
+            return text;
         }
     }
 }

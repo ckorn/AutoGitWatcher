@@ -12,6 +12,18 @@ namespace AutoGitWatcher
 
         private readonly AutoGitWatcher autoGitWatcher = new();
 
+        public event EventHandler<string>? Log;
+
+        public ViewModel()
+        {
+            this.autoGitWatcher.Log += AutoGitWatcher_Log;
+        }
+
+        private void AutoGitWatcher_Log(object? sender, string e)
+        {
+            this.Log?.Invoke(this, e);
+        }
+
         public void Apply() 
         {
             string[] directoryArray = Directories.Split(Environment.NewLine);
