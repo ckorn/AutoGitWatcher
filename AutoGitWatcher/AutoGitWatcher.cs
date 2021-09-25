@@ -1,6 +1,7 @@
 ﻿using LibGit2Sharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -114,7 +115,15 @@ namespace AutoGitWatcher
                                 Commands.Stage(repository, "*");
                                 Signature signature = repository.Config.BuildSignature(DateTimeOffset.Now);
                                 repository.Commit("AutoGitWatcher", signature, signature);
-                                repository.Network.Push(repository.Head);
+                                // pushing to ssh is not supported and the ssh lib is outdated.
+                                Process? process = Process.Start(new ProcessStartInfo() 
+                                {
+                                    WorkingDirectory = directory,
+                                    FileName = "git",
+                                    Arguments = "push",
+                                    CreateNoWindow = true,
+                                });
+                                process?.WaitForExit();
                             }
                         }
                     }
