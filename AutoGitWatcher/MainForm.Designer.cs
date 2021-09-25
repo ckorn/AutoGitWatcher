@@ -73,7 +73,6 @@
             // 
             // mlLog
             // 
-            this.mlLog.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceViewModel, "Directories", true));
             this.mlLog.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.mlLog.Location = new System.Drawing.Point(0, 325);
             this.mlLog.Multiline = true;
