@@ -18,6 +18,7 @@ namespace AutoGitWatcher
             InitializeComponent();
 
             this.viewModel = new ViewModel();
+            this.viewModel.LoadSettings();
             this.bindingSourceViewModel.DataSource = this.viewModel;
             this.viewModel.Log += ViewModel_Log;
         }

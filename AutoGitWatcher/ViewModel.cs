@@ -19,6 +19,11 @@ namespace AutoGitWatcher
             this.autoGitWatcher.Log += AutoGitWatcher_Log;
         }
 
+        public void LoadSettings() 
+        {
+            this.Directories = Properties.Settings.Default.Directories;
+        }
+
         private void AutoGitWatcher_Log(object? sender, string e)
         {
             this.Log?.Invoke(this, e);
@@ -28,6 +33,8 @@ namespace AutoGitWatcher
         {
             string[] directoryArray = Directories.Split(Environment.NewLine);
             this.autoGitWatcher.StartWatch(directoryArray);
+            Properties.Settings.Default.Directories = this.Directories;
+            Properties.Settings.Default.Save();
         }
     }
 }

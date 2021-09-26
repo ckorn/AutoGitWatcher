@@ -14,6 +14,13 @@ namespace AutoGitWatcher
         [STAThread]
         static void Main()
         {
+            if (Properties.Settings.Default.UpgradePending)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpgradePending = false;
+                Properties.Settings.Default.Save();
+            }
+
             ApplicationConfiguration.Initialize();
             Application.Run(new MainForm());
         }
