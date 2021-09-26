@@ -37,6 +37,7 @@ namespace AutoGitWatcher
             {
                 gitTask = Task.Factory.StartNew(() => GitTaskRun());
             }
+            Log?.Invoke(this, $"Start watching {directoryArray.Length} directories");
         }
 
         private void StopWatch() 
