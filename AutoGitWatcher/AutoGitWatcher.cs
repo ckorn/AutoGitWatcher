@@ -164,14 +164,17 @@ namespace AutoGitWatcher
                 List<string> toDelete = new();
                 try
                 {
-                    foreach (string directory in directoryList)
+                    Parallel.ForEach(directoryList, (string directory) =>
                     {
                         string gitDirectory = Path.Combine(directory, ".git");
                         if (!Directory.Exists(gitDirectory))
                         {
                             this.Log?.Invoke(this, $"{directory} not a git repository");
-                            toDelete.Add(directory);
-                            continue;
+                            lock (toDelete)
+                            {
+                                toDelete.Add(directory);
+                            }
+                            return;
                         }
                         using Repository repository = new(directory);
                         string beforeFetch = repository.Branches["origin/master"].Tip.Sha;
@@ -199,7 +202,7 @@ namespace AutoGitWatcher
                             });
                             processPull?.WaitForExit();
                         }
-                    }
+                    });
                 }
                 catch (Exception e)
                 {
