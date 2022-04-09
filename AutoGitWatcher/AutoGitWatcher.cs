@@ -124,12 +124,12 @@ namespace AutoGitWatcher
                             {
                                 toDelete.Add(keyValuePair.Key);
                                 string directory = keyValuePair.Key.Path;
-                                Repository repository = new(directory);
+                                using Repository repository = new(directory);
                                 Commands.Stage(repository, "*");
                                 Signature signature = repository.Config.BuildSignature(DateTimeOffset.Now);
                                 repository.Commit("AutoGitWatcher", signature, signature);
                                 // pushing to ssh is not supported and the ssh lib is outdated.
-                                Process? process = Process.Start(new ProcessStartInfo() 
+                                using Process? process = Process.Start(new ProcessStartInfo() 
                                 {
                                     WorkingDirectory = directory,
                                     FileName = "git",
@@ -173,15 +173,32 @@ namespace AutoGitWatcher
                             toDelete.Add(directory);
                             continue;
                         }
-                        // pulling from ssh is not supported and the ssh lib is outdated.
-                        Process? process = Process.Start(new ProcessStartInfo()
+                        using Repository repository = new(directory);
+                        string beforeFetch = repository.Branches["origin/master"].Tip.Sha;
+                        // fecthing from ssh is not supported and the ssh lib is outdated.
+                        using Process? processFetch = Process.Start(new ProcessStartInfo()
                         {
                             WorkingDirectory = directory,
                             FileName = "git",
-                            Arguments = "pull",
+                            Arguments = "fetch",
                             CreateNoWindow = true,
                         });
-                        process?.WaitForExit();
+                        processFetch?.WaitForExit();
+                        string afterFetch = repository.Branches["origin/master"].Tip.Sha;
+                        // pull makes sihost.exe consume 100% CPU. So workaround it by just pulling
+                        // when we fetched something.
+                        if (beforeFetch != afterFetch)
+                        {
+                            // pulling from ssh is not supported and the ssh lib is outdated.
+                            using Process? processPull = Process.Start(new ProcessStartInfo()
+                            {
+                                WorkingDirectory = directory,
+                                FileName = "git",
+                                Arguments = "pull",
+                                CreateNoWindow = true,
+                            });
+                            processPull?.WaitForExit();
+                        }
                     }
                 }
                 catch (Exception e)
