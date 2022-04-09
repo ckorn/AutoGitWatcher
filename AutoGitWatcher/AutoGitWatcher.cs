@@ -197,7 +197,7 @@ namespace AutoGitWatcher
                             {
                                 WorkingDirectory = directory,
                                 FileName = "git",
-                                Arguments = "pull",
+                                Arguments = "merge origin/master --ff-only",
                                 CreateNoWindow = true,
                             });
                             processPull?.WaitForExit();
