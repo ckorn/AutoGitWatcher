@@ -41,7 +41,12 @@ namespace AutoGitWatcher
 
         private void pbApply_Click(object sender, EventArgs e)
         {
-            this.viewModel.Apply();
+            this.viewModel.Push();
+        }
+
+        private void pbPull_Click(object sender, EventArgs e)
+        {
+            this.viewModel.Pull();
         }
     }
 }

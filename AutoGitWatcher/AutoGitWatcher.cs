@@ -14,7 +14,8 @@ namespace AutoGitWatcher
     {
         private readonly List<FileSystemWatcher> fileSystemWatcherList = new();
         private readonly Dictionary<FileSystemWatcher, DateTime> fileSystemWatcherLastChangeDictionary = new ();
-        private Task? gitTask = null;
+        private Task? gitPushTask = null;
+        private Task? gitPullTask = null;
 
         public event EventHandler<string>? Log;
 
@@ -23,8 +24,10 @@ namespace AutoGitWatcher
             StopWatch();
             foreach (string directory in directoryArray)
             {
-                FileSystemWatcher fileSystemWatcher = new (directory);
-                fileSystemWatcher.IncludeSubdirectories = true;
+                FileSystemWatcher fileSystemWatcher = new(directory)
+                {
+                    IncludeSubdirectories = true
+                };
                 fileSystemWatcher.Changed += FileSystemWatcher_Changed;
                 fileSystemWatcher.Created += FileSystemWatcher_Created;
                 fileSystemWatcher.Renamed += FileSystemWatcher_Renamed;
@@ -33,11 +36,20 @@ namespace AutoGitWatcher
                 fileSystemWatcher.EnableRaisingEvents = true;
                 fileSystemWatcherList.Add(fileSystemWatcher);
             }
-            if (gitTask == null)
+            if (gitPushTask == null)
             {
-                gitTask = Task.Factory.StartNew(() => GitTaskRun());
+                gitPushTask = Task.Factory.StartNew(() => GitPushTaskRun());
             }
             Log?.Invoke(this, $"Start watching {directoryArray.Length} directories");
+        }
+
+        public void StartPull(string[] directoryArray)
+        {
+            if (gitPullTask != null)
+            {
+                throw new InvalidOperationException();
+            }
+            gitPullTask = Task.Factory.StartNew((x) => GitPullTaskRun(x as List<string>), directoryArray.ToList());
         }
 
         private void StopWatch() 
@@ -96,7 +108,7 @@ namespace AutoGitWatcher
             }
         }
 
-        private void GitTaskRun() 
+        private void GitPushTaskRun() 
         {
             while (true)
             {
@@ -136,6 +148,49 @@ namespace AutoGitWatcher
                     {
                         toDelete.ForEach(x => fileSystemWatcherLastChangeDictionary.Remove(x));
                     }
+                }
+            }
+        }
+
+        private void GitPullTaskRun(List<string>? directoryList)
+        {
+            if (directoryList == null)
+            {
+                return;
+            }
+            while (true)
+            {
+                Thread.Sleep(5000);
+                List<string> toDelete = new();
+                try
+                {
+                    foreach (string directory in directoryList)
+                    {
+                        string gitDirectory = Path.Combine(directory, ".git");
+                        if (!Directory.Exists(gitDirectory))
+                        {
+                            this.Log?.Invoke(this, $"{directory} not a git repository");
+                            toDelete.Add(directory);
+                            continue;
+                        }
+                        // pulling from ssh is not supported and the ssh lib is outdated.
+                        Process? process = Process.Start(new ProcessStartInfo()
+                        {
+                            WorkingDirectory = directory,
+                            FileName = "git",
+                            Arguments = "pull",
+                            CreateNoWindow = true,
+                        });
+                        process?.WaitForExit();
+                    }
+                }
+                catch (Exception e)
+                {
+                    this.Log?.Invoke(this, GetExceptionText(e));
+                }
+                finally
+                {
+                    toDelete.ForEach(x => directoryList.Remove(x));
                 }
             }
         }
