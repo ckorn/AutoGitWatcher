@@ -187,6 +187,10 @@ namespace AutoGitWatcher
                             CreateNoWindow = true,
                         });
                         processFetch?.WaitForExit();
+                        if (processFetch?.ExitCode != 0)
+                        {
+                            throw new InvalidOperationException($"Fetch exit code={processFetch?.ExitCode} ({directory})");
+                        }
                         string afterFetch = repository.Branches["origin/master"].Tip.Sha;
                         // pull makes sihost.exe consume 100% CPU. So workaround it by just pulling
                         // when we fetched something.
