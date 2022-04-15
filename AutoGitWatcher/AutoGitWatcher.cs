@@ -176,35 +176,18 @@ namespace AutoGitWatcher
                             }
                             return;
                         }
-                        using Repository repository = new(directory);
-                        string beforeFetch = repository.Branches["origin/master"].Tip.Sha;
-                        // fecthing from ssh is not supported and the ssh lib is outdated.
-                        using Process? processFetch = Process.Start(new ProcessStartInfo()
+                        // pulling from ssh is not supported and the ssh lib is outdated.
+                        using Process? processPull = Process.Start(new ProcessStartInfo()
                         {
                             WorkingDirectory = directory,
                             FileName = "git",
-                            Arguments = "fetch",
+                            Arguments = "pull",
                             CreateNoWindow = true,
                         });
-                        processFetch?.WaitForExit();
-                        if (processFetch?.ExitCode != 0)
+                        processPull?.WaitForExit();
+                        if (processPull?.ExitCode != 0)
                         {
-                            throw new InvalidOperationException($"Fetch exit code={processFetch?.ExitCode} ({directory})");
-                        }
-                        string afterFetch = repository.Branches["origin/master"].Tip.Sha;
-                        // pull makes sihost.exe consume 100% CPU. So workaround it by just pulling
-                        // when we fetched something.
-                        if (beforeFetch != afterFetch)
-                        {
-                            // pulling from ssh is not supported and the ssh lib is outdated.
-                            using Process? processPull = Process.Start(new ProcessStartInfo()
-                            {
-                                WorkingDirectory = directory,
-                                FileName = "git",
-                                Arguments = "merge origin/master --ff-only",
-                                CreateNoWindow = true,
-                            });
-                            processPull?.WaitForExit();
+                            throw new InvalidOperationException($"Pull exit code={processPull?.ExitCode} ({directory})");
                         }
                     });
                 }
