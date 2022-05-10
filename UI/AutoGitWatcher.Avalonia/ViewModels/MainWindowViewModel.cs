@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using UI.AutoGitWatcher.Avalonia.Models;
 
-namespac.ViewModels
+namespace UI.AutoGitWatcher.Avalonia.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
