@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:UI.AutoGitWatcher.Avalonia.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" Width="800" Height="450"
+        x:Class="UI.AutoGitWatcher.Avalonia.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="AutoGitWatcher">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<DockPanel>
+		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Height="50" Spacing="20">
+			<Button Name="pbPush" Width="70" HorizontalContentAlignment="Center" Command="{Binding Push}">Push</Button>
+			<Button Name="pbPull" Width="70" HorizontalContentAlignment="Center" Command="{Binding Pull}">Pull</Button>
+		</StackPanel>
+		<TextBox Name="mlLog" DockPanel.Dock="Bottom" Height="100" IsReadOnly="True"
+				 AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding Log, Mode=TwoWay}"></TextBox>
+		<TextBox Name="mlDirectories" AcceptsReturn="True" TextWrapping="Wrap"
+				 Text="{Binding Directories, Mode=TwoWay}"></TextBox>
+	</DockPanel>
+
+</Window>
