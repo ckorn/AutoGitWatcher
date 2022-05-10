@@ -1,8 +1,8 @@
 using Logic.AutoGitManagement.Contract;
-using SettingsProviderNet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UI.AutoGitWatcher.Avalonia.Models;
@@ -20,8 +20,6 @@ namespace UI.AutoGitWatcher.Avalonia.ViewModels
 
         private readonly IAutoGitWatcher autoGitWatcher = new Logic.AutoGitManagement.AutoGitWatcher();
 
-        private readonly SettingsProvider settingsProvider = new (new RoamingAppDataStorage("AutoGitWatcher.Avalonia"));
-
         public new event PropertyChangedEventHandler? PropertyChanged;
 
         public MainWindowViewModel()
@@ -31,10 +29,34 @@ namespace UI.AutoGitWatcher.Avalonia.ViewModels
             LoadSettings();
         }
 
+        private string GetSettingsFile()
+        {
+            string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AutoGitWatcher.Avalonia");
+            if (!Directory.Exists(settingsPath))
+            {
+                Directory.CreateDirectory(settingsPath);
+            }
+            settingsPath = Path.Combine(settingsPath, "settings.json");
+            return settingsPath;
+        }
+
         public void LoadSettings()
         {
-            Settings settings = settingsProvider.GetSettings<Settings>();
-            this.Directories = settings.Directories;
+            string settingsPath = GetSettingsFile();
+            if (File.Exists(settingsPath))
+            {
+                string json = File.ReadAllText(settingsPath);
+                Settings settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings>(json) ?? new Settings();
+                this.Directories = settings.Directories;
+            }
+        }
+
+
+        public void SaveSettings(Settings settings)
+        {
+            string settingsPath = GetSettingsFile();
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(settings);
+            File.WriteAllText(settingsPath, json);
         }
 
         private void AutoGitWatcher_Log(object? sender, string e)
@@ -47,7 +69,7 @@ namespace UI.AutoGitWatcher.Avalonia.ViewModels
             string[] directoryArray = Directories.Split(Environment.NewLine);
             this.autoGitWatcher.StartWatch(directoryArray);
             Settings settings = new() { Directories = this.Directories };
-            settingsProvider.SaveSettings(settings);
+            SaveSettings(settings);
             EnableGui = false;
         }
 
@@ -56,7 +78,7 @@ namespace UI.AutoGitWatcher.Avalonia.ViewModels
             string[] directoryArray = Directories.Split(Environment.NewLine);
             this.autoGitWatcher.StartPull(directoryArray);
             Settings settings = new() { Directories = this.Directories };
-            settingsProvider.SaveSettings(settings);
+            SaveSettings(settings);
             EnableGui = false;
         }
 
