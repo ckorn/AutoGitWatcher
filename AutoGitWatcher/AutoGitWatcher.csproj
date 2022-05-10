@@ -5,10 +5,13 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>UI.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
   </PropertyGroup>
 
+
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
+    <ProjectReference Include="..\Logic\AutoGitManagement.Contract\AutoGitManagement.Contract.csproj" />
+    <ProjectReference Include="..\Logic\AutoGitManagement\AutoGitManagement.csproj" />
   </ItemGroup>
 
   <ItemGroup>

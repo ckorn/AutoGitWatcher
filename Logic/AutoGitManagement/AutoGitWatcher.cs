@@ -1,25 +1,24 @@
 ﻿using LibGit2Sharp;
+using Logic.AutoGitManagement.Contract;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace AutoGitWatcher
+namespace Logic.AutoGitManagement
 {
-    public class AutoGitWatcher
+    public class AutoGitWatcher : IAutoGitWatcher
     {
         private readonly List<FileSystemWatcher> fileSystemWatcherList = new();
-        private readonly Dictionary<FileSystemWatcher, DateTime> fileSystemWatcherLastChangeDictionary = new ();
+        private readonly Dictionary<FileSystemWatcher, DateTime> fileSystemWatcherLastChangeDictionary = new();
         private Task? gitPushTask = null;
         private Task? gitPullTask = null;
 
         public event EventHandler<string>? Log;
 
-        public void StartWatch(string[] directoryArray) 
+        public void StartWatch(string[] directoryArray)
         {
             StopWatch();
             foreach (string directory in directoryArray)
@@ -52,7 +51,7 @@ namespace AutoGitWatcher
             gitPullTask = Task.Factory.StartNew((x) => GitPullTaskRun(x as List<string>), directoryArray.ToList());
         }
 
-        private void StopWatch() 
+        private void StopWatch()
         {
             foreach (FileSystemWatcher fileSystemWatcher in fileSystemWatcherList)
             {
@@ -95,7 +94,7 @@ namespace AutoGitWatcher
             RecordChange((FileSystemWatcher)sender, e.FullPath);
         }
 
-        private void RecordChange(FileSystemWatcher fileSystemWatcher, string path) 
+        private void RecordChange(FileSystemWatcher fileSystemWatcher, string path)
         {
             // Ignore changes in the git repository because of the commit
             if (path.Contains(".git"))
@@ -108,7 +107,7 @@ namespace AutoGitWatcher
             }
         }
 
-        private void GitPushTaskRun() 
+        private void GitPushTaskRun()
         {
             while (true)
             {
@@ -129,7 +128,7 @@ namespace AutoGitWatcher
                                 Signature signature = repository.Config.BuildSignature(DateTimeOffset.Now);
                                 repository.Commit("AutoGitWatcher", signature, signature);
                                 // pushing to ssh is not supported and the ssh lib is outdated.
-                                using Process? process = Process.Start(new ProcessStartInfo() 
+                                using Process? process = Process.Start(new ProcessStartInfo()
                                 {
                                     WorkingDirectory = directory,
                                     FileName = "git",
@@ -219,7 +218,7 @@ namespace AutoGitWatcher
             }
         }
 
-        private string GetExceptionText(Exception e) 
+        private string GetExceptionText(Exception e)
         {
             string text = e.Message;
             text += Environment.NewLine + e.StackTrace;

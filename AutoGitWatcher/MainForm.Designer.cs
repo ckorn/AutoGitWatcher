@@ -1,4 +1,4 @@
-﻿namespace AutoGitWatcher
+﻿namespace UI.AutoGitWatcher
 {
     partial class MainForm
     {

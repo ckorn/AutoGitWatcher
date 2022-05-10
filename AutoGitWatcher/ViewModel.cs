@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logic.AutoGitManagement.Contract;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoGitWatcher
+namespace UI.AutoGitWatcher
 {
     public class ViewModel : INotifyPropertyChanged
     {
@@ -14,7 +15,7 @@ namespace AutoGitWatcher
         private bool enableGui = true;
         public string Directories { get; set; } = string.Empty;
 
-        private readonly AutoGitWatcher autoGitWatcher = new();
+        private readonly IAutoGitWatcher autoGitWatcher = new Logic.AutoGitManagement.AutoGitWatcher();
 
         public event EventHandler<string>? Log;
         public event PropertyChangedEventHandler? PropertyChanged;

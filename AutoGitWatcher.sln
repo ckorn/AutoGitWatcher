@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoGitWatcher", "AutoGitWatcher\AutoGitWatcher.csproj", "{B06DA068-5BA0-4560-A28B-232308826E50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoGitWatcher", "AutoGitWatcher\AutoGitWatcher.csproj", "{B06DA068-5BA0-4560-A28B-232308826E50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logic", "Logic", "{1F135222-50CA-4E45-AF18-04909175FDB0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{89883CA7-15EC-48EA-8E12-97A6FAF4EA25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoGitManagement.Contract", "Logic\AutoGitManagement.Contract\AutoGitManagement.Contract.csproj", "{F99FCAEC-40C7-4A14-9225-FFB6A5FD736D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoGitManagement", "Logic\AutoGitManagement\AutoGitManagement.csproj", "{11F04359-2804-4758-BB5E-6808F3CD00BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +23,22 @@ Global
 		{B06DA068-5BA0-4560-A28B-232308826E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B06DA068-5BA0-4560-A28B-232308826E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B06DA068-5BA0-4560-A28B-232308826E50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F99FCAEC-40C7-4A14-9225-FFB6A5FD736D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F99FCAEC-40C7-4A14-9225-FFB6A5FD736D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F99FCAEC-40C7-4A14-9225-FFB6A5FD736D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F99FCAEC-40C7-4A14-9225-FFB6A5FD736D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11F04359-2804-4758-BB5E-6808F3CD00BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F04359-2804-4758-BB5E-6808F3CD00BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11F04359-2804-4758-BB5E-6808F3CD00BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11F04359-2804-4758-BB5E-6808F3CD00BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B06DA068-5BA0-4560-A28B-232308826E50} = {89883CA7-15EC-48EA-8E12-97A6FAF4EA25}
+		{F99FCAEC-40C7-4A14-9225-FFB6A5FD736D} = {1F135222-50CA-4E45-AF18-04909175FDB0}
+		{11F04359-2804-4758-BB5E-6808F3CD00BE} = {1F135222-50CA-4E45-AF18-04909175FDB0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {924DB3E1-0377-4843-922F-F74B6FDA8A23}
