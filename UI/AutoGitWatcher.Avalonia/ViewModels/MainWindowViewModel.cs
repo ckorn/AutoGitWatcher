@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using ReactiveUI;
 using UI.AutoGitWatcher.Avalonia.Models;
 
 namespace UI.AutoGitWatcher.Avalonia.ViewModels
@@ -12,11 +13,29 @@ namespace UI.AutoGitWatcher.Avalonia.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         public string Directories { get; set; } = "";
-        public string Log { get => log; set { log = value; OnPropertyChanged(); } }
-        public string log = "";
 
-        public bool EnableGui { get => enableGui; set { enableGui = value; OnPropertyChanged(); } }
-        private bool enableGui = true;
+        private string _Log = "This is a test string";
+
+        /// <summary>
+        /// Gets or sets the log 
+        /// </summary>
+        public string Log
+        {
+            get => _Log;
+            set => this.RaiseAndSetIfChanged(ref _Log, value);
+        }
+
+        private bool _EnableGui = true;
+
+        /// <summary>
+        /// Gets or sets enable GUI
+        /// </summary>
+        public bool EnableGui
+        {
+            get => _EnableGui;
+            set =>this.RaiseAndSetIfChanged(ref _EnableGui, value);
+        }
+        
 
         private readonly IAutoGitWatcher autoGitWatcher = new Logic.AutoGitManagement.AutoGitWatcher();
 
