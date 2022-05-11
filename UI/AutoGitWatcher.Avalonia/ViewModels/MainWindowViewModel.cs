@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using ReactiveUI;
 using UI.AutoGitWatcher.Avalonia.Models;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace UI.AutoGitWatcher.Avalonia.ViewModels
 {
@@ -27,7 +29,10 @@ namespace UI.AutoGitWatcher.Avalonia.ViewModels
         {
             this.autoGitWatcher.Log += AutoGitWatcher_Log;
 
-            LoadSettings();
+            if (Program.IsApplicationRunning)
+            {
+                LoadSettings();
+            }
         }
 
         private string GetSettingsFile()
