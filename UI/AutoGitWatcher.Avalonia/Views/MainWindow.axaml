@@ -14,8 +14,10 @@
 
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Height="50" Spacing="20">
-			<Button Name="pbPush" Width="70" HorizontalContentAlignment="Center" Command="{Binding Push}">Push</Button>
-			<Button Name="pbPull" Width="70" HorizontalContentAlignment="Center" Command="{Binding Pull}">Pull</Button>
+			<Button Name="pbPush" Width="70" HorizontalContentAlignment="Center"
+					Command="{Binding Push}" IsEnabled="{Binding EnableGui, Mode=TwoWay}">Push</Button>
+			<Button Name="pbPull" Width="70" HorizontalContentAlignment="Center"
+					Command="{Binding Pull}" IsEnabled="{Binding EnableGui, Mode=TwoWay}">Pull</Button>
 		</StackPanel>
 		<TextBox Name="mlLog" DockPanel.Dock="Bottom" Height="100" IsReadOnly="True"
 				 AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding Log, Mode=TwoWay}"></TextBox>

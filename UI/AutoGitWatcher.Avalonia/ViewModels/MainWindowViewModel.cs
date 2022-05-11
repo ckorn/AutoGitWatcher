@@ -12,34 +12,16 @@ namespace UI.AutoGitWatcher.Avalonia.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string Directories { get; set; } = "";
+        public string Directories { get => directories; set => this.RaiseAndSetIfChanged(ref directories, value); }
+        private string directories = string.Empty;
 
-        private string _Log = "This is a test string";
+        public string Log { get => log; set => this.RaiseAndSetIfChanged(ref log, value); }
+        private string log = string.Empty;
 
-        /// <summary>
-        /// Gets or sets the log 
-        /// </summary>
-        public string Log
-        {
-            get => _Log;
-            set => this.RaiseAndSetIfChanged(ref _Log, value);
-        }
-
-        private bool _EnableGui = true;
-
-        /// <summary>
-        /// Gets or sets enable GUI
-        /// </summary>
-        public bool EnableGui
-        {
-            get => _EnableGui;
-            set =>this.RaiseAndSetIfChanged(ref _EnableGui, value);
-        }
-        
+        public bool EnableGui { get => enableGui; set => this.RaiseAndSetIfChanged(ref enableGui, value); }
+        private bool enableGui = true;
 
         private readonly IAutoGitWatcher autoGitWatcher = new Logic.AutoGitManagement.AutoGitWatcher();
-
-        public new event PropertyChangedEventHandler? PropertyChanged;
 
         public MainWindowViewModel()
         {
@@ -99,11 +81,6 @@ namespace UI.AutoGitWatcher.Avalonia.ViewModels
             Settings settings = new() { Directories = this.Directories };
             SaveSettings(settings);
             EnableGui = false;
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
