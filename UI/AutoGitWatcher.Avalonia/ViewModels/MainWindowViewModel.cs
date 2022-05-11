@@ -5,22 +5,23 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using ReactiveUI;
 using UI.AutoGitWatcher.Avalonia.Models;
 
 namespace UI.AutoGitWatcher.Avalonia.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string Directories { get; set; } = "";
-        public string Log { get => log; set { log = value; OnPropertyChanged(); } }
-        public string log = "";
+        public string Directories { get => directories; set => this.RaiseAndSetIfChanged(ref directories, value); }
+        private string directories = string.Empty;
 
-        public bool EnableGui { get => enableGui; set { enableGui = value; OnPropertyChanged(); } }
+        public string Log { get => log; set => this.RaiseAndSetIfChanged(ref log, value); }
+        private string log = string.Empty;
+
+        public bool EnableGui { get => enableGui; set => this.RaiseAndSetIfChanged(ref enableGui, value); }
         private bool enableGui = true;
 
         private readonly IAutoGitWatcher autoGitWatcher = new Logic.AutoGitManagement.AutoGitWatcher();
-
-        public new event PropertyChangedEventHandler? PropertyChanged;
 
         public MainWindowViewModel()
         {
@@ -80,11 +81,6 @@ namespace UI.AutoGitWatcher.Avalonia.ViewModels
             Settings settings = new() { Directories = this.Directories };
             SaveSettings(settings);
             EnableGui = false;
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
